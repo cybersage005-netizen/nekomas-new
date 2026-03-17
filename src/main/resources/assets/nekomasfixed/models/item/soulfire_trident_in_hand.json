@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/trident_in_hand",
+  "textures": {
+    "particle": "nekomasfixed:item/soulfire_trident_3d"
+  }
+}

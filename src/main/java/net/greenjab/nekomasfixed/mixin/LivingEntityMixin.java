@@ -1,17 +1,15 @@
 package net.greenjab.nekomasfixed.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.greenjab.nekomasfixed.registry.entity.WildFire.WildFireEntity;
+import net.greenjab.nekomasfixed.registry.item.SoulfireShieldItem;
 import net.greenjab.nekomasfixed.registry.registries.ItemRegistry;
-import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,9 +17,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 
 
 @Mixin(LivingEntity.class)
@@ -57,7 +54,25 @@ public class LivingEntityMixin {
 
         return amount;
     }
+    @Inject(method = "takeShieldHit", at = @At("HEAD"))
+    private void onShieldHit(ServerWorld world, LivingEntity attacker, CallbackInfo ci) {
+        LivingEntity defender = (LivingEntity)(Object)this;
+        ItemStack activeItem = defender.getActiveItem();
 
+        if (activeItem.getItem() instanceof SoulfireShieldItem shield) {
+            if (defender instanceof PlayerEntity player) {
+                if (player.getHealth() <= 6.0f) {
+                    attacker.setOnFireForTicks(20 * 3);
+                    attacker.takeKnockback(1.0,
+                            attacker.getX() + player.getX(),
+                            attacker.getZ() + player.getZ());
+                } else {
+                    attacker.setOnFireForTicks(20 * 1);
+                }
+            }
+
+        }
+    }
 
     @Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getActiveItem()Lnet/minecraft/item/ItemStack;"), cancellable = true)
     private void cancel0Damage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
@@ -73,24 +88,5 @@ public class LivingEntityMixin {
         } else {
             return 0.0F;
         }
-    }
-
-    @ModifyExpressionValue(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tryUseDeathProtector(Lnet/minecraft/entity/damage/DamageSource;)Z"))
-    private boolean wildFireSecondPhase(boolean original, @Local(argsOnly = true) DamageSource source) {
-        LivingEntity LE = (LivingEntity)(Object)this;
-        if (LE instanceof WildFireEntity wildFireEntity) {
-            if (source.isIn(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                return false;
-            } else {
-                if (!wildFireEntity.isSoulActive()) {
-                    wildFireEntity.setSoulActive(true);
-                    wildFireEntity.setShieldsActive(4);
-                    wildFireEntity.setHealth(wildFireEntity.getMaxHealth());
-                    wildFireEntity.getEntityWorld().sendEntityStatus(wildFireEntity, EntityStatuses.USE_TOTEM_OF_UNDYING);
-                    return true;
-                }
-            }
-        }
-        return original;
     }
 }

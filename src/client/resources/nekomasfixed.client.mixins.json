@@ -4,20 +4,27 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AbstractFurnaceScreenMixin",
+    "BedBlockEntityRendererMixin",
+    "BedBlockEntityRenderStateMixin",
     "BipedEntityModelMixin",
     "BipedEntityRendererMixin",
     "ClientPlayerInteractionManagerMixin",
     "EntityModelsMixin",
+    "EquipmentAssetProviderMixin",
     "EquipmentRendererMixin",
+    "FireCommandRendererMixin",
     "HeldItemRendererMixin",
     "LabelCommandRendererCommandMixin",
     "LabelCommandRendererMixin",
     "MinecraftClientMixin",
     "ParticleManagerMixin",
     "ParticleSpriteManagerMixin",
+    "SpecialModelTypesMixin",
     "TooltipComponentMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+  ]
 }
