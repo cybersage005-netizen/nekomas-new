@@ -1,7 +1,12 @@
 package net.greenjab.nekomasfixed.registry.recipe;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.block.entity.BannerPattern;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworkExplosionComponent;
+import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -14,6 +19,10 @@ import net.minecraft.recipe.IngredientPlacement;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.recipe.book.RecipeBookCategories;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BannerPatternTags;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.World;
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +64,7 @@ public class PyrotechnicsRecipe implements Recipe<RecipeInput> {
     @Override
     public boolean matches(RecipeInput input, World world) {
         if (input.size() < 4) return false;
-        return this.dye1.test(input.getStackInSlot(0)) &&
-                this.dye2.test(input.getStackInSlot(1)) &&
-                this.paper.test(input.getStackInSlot(2)) &&
-                this.gunpowder.test(input.getStackInSlot(3));
+        return this.dye1.test(input.getStackInSlot(0)) && this.dye2.test(input.getStackInSlot(1)) && this.paper.test(input.getStackInSlot(2)) && this.gunpowder.test(input.getStackInSlot(3));
     }
 
     @Override
@@ -74,15 +80,12 @@ public class PyrotechnicsRecipe implements Recipe<RecipeInput> {
     @Override
     public IngredientPlacement getIngredientPlacement() {
         if (this.ingredientPlacement == null) {
-            this.ingredientPlacement = IngredientPlacement.forMultipleSlots(List.of(
-                    Optional.of(this.dye1),
-                    Optional.of(this.dye2),
-                    Optional.of(this.paper),
-                    Optional.of(this.gunpowder)
-            ));
+            this.ingredientPlacement = IngredientPlacement.forMultipleSlots(List.of(Optional.of(this.dye1), Optional.of(this.dye2), Optional.of(this.paper), Optional.of(this.gunpowder)));
         }
         return this.ingredientPlacement;
     }
+
+
 
     @Override
     public RecipeSerializer<? extends Recipe<RecipeInput>> getSerializer() {
