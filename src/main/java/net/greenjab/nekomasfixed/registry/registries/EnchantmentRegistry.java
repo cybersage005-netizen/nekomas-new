@@ -9,14 +9,14 @@ import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
 
 public class EnchantmentRegistry {
-    public static final RegistryKey<Enchantment> LEECHING =
-            RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of("nekomasfixed", "leeching"));
+    public static final RegistryKey<Enchantment> DISMOUNT =
+            RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of("nekomasfixed", "dismount"));
 
     public static void bootstrap(Registerable<Enchantment> registerable) {
         var items = registerable.getRegistryLookup(RegistryKeys.ITEM);
 
         registerable.register(
-                LEECHING,
+                DISMOUNT,
                 Enchantment.builder(
                         Enchantment.definition(
                                 items.getOrThrow(ItemTags.WEAPON_ENCHANTABLE),
@@ -27,7 +27,7 @@ public class EnchantmentRegistry {
                                 1,
                                 AttributeModifierSlot.MAINHAND
                         )
-                ).build(LEECHING.getValue())
+                ).build(DISMOUNT.getValue())
         );
     }
 }

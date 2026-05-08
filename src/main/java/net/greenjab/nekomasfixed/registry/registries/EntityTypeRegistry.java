@@ -3,9 +3,12 @@ package net.greenjab.nekomasfixed.registry.registries;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.greenjab.nekomasfixed.NekomasFixed;
 import net.greenjab.nekomasfixed.registry.entity.*;
+import net.greenjab.nekomasfixed.registry.entity.Moobloom.MoobloomEntity;
 import net.greenjab.nekomasfixed.registry.entity.WildFire.FireBombEntity;
 import net.greenjab.nekomasfixed.registry.entity.WildFire.WildFireEntity;
+import net.greenjab.nekomasfixed.registry.entity.Termite.TermiteEntity;
 import net.minecraft.entity.*;
+import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.vehicle.AbstractBoatEntity;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -16,6 +19,7 @@ import net.minecraft.world.Heightmap;
 
 import java.util.List;
 import java.util.function.Supplier;
+
 
 public class EntityTypeRegistry {
 
@@ -66,6 +70,16 @@ public class EntityTypeRegistry {
         return (type, world) -> new HugeBoatEntity(type, world, itemSupplier);
     }
 
+    public static final EntityType<TermiteEntity> TERMITE = register(
+            "termite",
+            EntityType.Builder.create(TermiteEntity::new, SpawnGroup.MONSTER).dimensions(0.5f, 0.5f)
+    );
+
+    public static final EntityType<MoobloomEntity> MOOBLOOM = register(
+            "moobloom",
+            EntityType.Builder.create(MoobloomEntity::new, SpawnGroup.AMBIENT).dimensions(1f, 1f)
+    );
+
 
     public static final EntityType<TargetDummyEntity> TARGET_DUMMY = register(
             "target_dummy",
@@ -78,6 +92,15 @@ public class EntityTypeRegistry {
 
     public static final EntityType<WildFireEntity> WILD_FIRE = register(
             "wild_fire", EntityType.Builder.create(WildFireEntity::new, SpawnGroup.MONSTER).makeFireImmune().dimensions(0.75F, 1.975F).maxTrackingRange(8).notAllowedInPeaceful()
+    );
+    public static final EntityType<SoulfireTridentEntity> SOULFIRE_TRIDENT = register(
+            "soulfire_trident",
+            EntityType.Builder.<SoulfireTridentEntity>create(SoulfireTridentEntity::new, SpawnGroup.MISC)
+                    .dropsNothing()
+                    .dimensions(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .maxTrackingRange(4)
+                    .trackingTickInterval(20)
     );
 
     public static final EntityType<SlingshotProjectileEntity> SLINGSHOT_PROJECTILE = register(
@@ -114,6 +137,7 @@ public class EntityTypeRegistry {
         System.out.println("register EntityType");
         FabricDefaultAttributeRegistry.register(TARGET_DUMMY, TargetDummyEntity.createTargetDummyAttributes().build());
         FabricDefaultAttributeRegistry.register(WILD_FIRE, WildFireEntity.createWildFireAttributes().build());
+        //FabricDefaultAttributeRegistry.register(PIGLIN_HOGLIN, PiglinHoglinEntity.createPiglinHoglinAttributes().build());
 
         SpawnRestriction.register(WILD_FIRE, SpawnLocationTypes.IN_LAVA, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, WildFireEntity::canSpawn);
     }

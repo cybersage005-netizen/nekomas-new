@@ -1,0 +1,15 @@
+package net.greenjab.nekomasfixed.world;
+
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+
+public class ModConfiguredFeatures {
+
+    public static final RegistryKey<ConfiguredFeature<?, ?>> BOABAB_KEY = registerKey("boabab");
+    public static RegistryKey<ConfiguredFeature<?, ?>> registerKey(String name) {
+        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, Identifier.of("nekomasfixed", name));
+    }
+
+}

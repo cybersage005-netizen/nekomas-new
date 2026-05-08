@@ -6,6 +6,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.entity.CollisionEvent;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,6 +24,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 public class HoneyCauldronBlock extends AbstractCauldronBlock {
     public static final MapCodec<HoneyCauldronBlock> CODEC = createCodec(HoneyCauldronBlock::new);
@@ -73,7 +80,6 @@ public class HoneyCauldronBlock extends AbstractCauldronBlock {
         return behaviorMap;
     }
 
-    // New method to increment honey level
     public static void incrementHoneyLevel(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand) {
         if (world.isClient()) return;
 
@@ -86,7 +92,6 @@ public class HoneyCauldronBlock extends AbstractCauldronBlock {
         }
     }
 
-    // Overloaded method without player (for automatic filling)
     public static void incrementHoneyLevel(BlockState state, World world, BlockPos pos) {
         if (world.isClient()) return;
 
@@ -96,6 +101,10 @@ public class HoneyCauldronBlock extends AbstractCauldronBlock {
             world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY,
                     SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
+    }
+
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
+        Objects.requireNonNull(entity.getEntity()).setStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 3*20), entity.getEntity());
     }
 
     @Override

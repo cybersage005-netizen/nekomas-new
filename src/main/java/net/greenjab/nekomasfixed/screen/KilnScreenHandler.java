@@ -22,8 +22,8 @@ public class KilnScreenHandler extends AbstractFurnaceScreenHandler {
                              Inventory inventory, PropertyDelegate propertyDelegate) {
         super(
                 ScreenHandlerRegistry.KILN_SCREEN_HANDLER,
-                RecipeRegistry.KILN_RECIPE_TYPE,
-                null,
+                RecipeRegistry.KILN,
+                RecipeRegistry.KILN_INPUT,
                 RecipeBookType.FURNACE,
                 syncId,
                 playerInventory,
